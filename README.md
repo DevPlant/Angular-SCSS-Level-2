@@ -6,20 +6,22 @@ The content of a given component may be already killed while it still fades out,
 Use case:
 A component is displayed with *ngIf='condition' : 
 
-<my-list [contents]='contents' *ngIf='contents.length > 0'></my-list>
+`<my-list [contents]='contents' *ngIf='contents.length > 0'></my-list>`
 
 It's task is to render contents received as @Input().
 
 Usually one would apply an animation like this:
 
-<my-list [@fadeInOut] [contents]='contents' *ngIf='contents.length > 0'></my-list>
+`<my-list [@fadeInOut] [contents]='contents' *ngIf='contents.length > 0'></my-list>`
 
 The fade out animation is coupled with the destruction of the component (when 'condition' evaluates to false).
 Something like:
 
+```
 transition(':leave', [
     animate(500, style({opacity: 0}))
 ])
+```
 
 When 'condition' changes from true to false, it's likely that the relevant @Input() has also changed. It may even be null. These changes reflect in the component even before the fade out begins, which you don't want to happen.
 
@@ -27,15 +29,17 @@ This app showcases a smart component wrapper that handles fade-In-Out logic such
 
 # How to use
 
-The *ngIf='condition' becomes [displayCondition]='condition'
+The `*ngIf='condition'` becomes `[displayCondition]='condition'`
 
+```
 <fade-wrapper [displayCondition]='contents.length > 0'>
   <my-list [contents]='contents'></my-list>
 </fade-wrapper>
+```
 
 When the displayCondition becomes false, <my-list> is hidden, and then it's removed from the DOM.
 You may wanna keep it in the DOM. 
-Then use <fade-wrapper [displayCondition]='...' [keepAlive]='true'></fade-wrapper>
+Then use `<fade-wrapper [displayCondition]='...' [keepAlive]='true'></fade-wrapper>`
 
 # ComponentizeApp
 
