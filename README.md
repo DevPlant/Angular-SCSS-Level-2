@@ -7,15 +7,15 @@ The content of a given component may be already killed while the component is fa
 Use case:
 A component is displayed with *ngIf='condition' : 
 
-`<my-list [contents]='contents' *ngIf='contents.length > 0'></my-list>`
+`<my-list [content]='content' *ngIf='content.length > 0'></my-list>`
 
-It's task is to render contents received as @Input().
+It's task is to render the content in a nice layout.
 
-Usually one would apply an animation like this:
+Usually you would apply an animation like this:
 
-`<my-list [@fadeInOut] [contents]='contents' *ngIf='contents.length > 0'></my-list>`
+`<my-list [@fadeInOut] [content]='content' *ngIf='content.length > 0'></my-list>`
 
-The fade out animation is coupled with the destruction of the component (when 'condition' evaluates to false).
+The fade out transition is coupled with the destruction of the component (when 'condition' evaluates to false).
 Something like:
 
 ```
@@ -24,9 +24,9 @@ transition(':leave', [
 ])
 ```
 
-When 'condition' changes from true to false, it's likely that the relevant @Input() has also changed. It may even be null. These changes reflect in the component even before the fade out begins, which you don't want to happen.
+When 'condition' changes from true to false, the renderer is not needed anymore. Then it's likely that content has also changed. It may even be null now. These changes reflect in the component even before the fade out begins, which you don't want to happen.
 
-This app showcases a smart component wrapper that handles fade-In-Out logic such that fade in and out looks cool. There is no more animation attached to the initial component, but to the wrapper.
+This app showcases a smart component wrapper that handles fade-In-Out logic such that fade in and out looks cool. There is no more animation attached to the initial component, but only to the wrapper.
 
 # How to use
 
