@@ -38,7 +38,7 @@ The `*ngIf='condition'` becomes `[displayCondition]='condition'`
 </fade-wrapper>
 ```
 
-When the displayCondition becomes false, <my-list> is hidden, and then it's removed from the DOM.
+When the displayCondition becomes false, `<my-list>` is hidden, and then it's removed from the DOM.
 You may wanna keep it in the DOM. 
 Then use `<fade-wrapper [displayCondition]='...' [keepAlive]='true'></fade-wrapper>`
 
