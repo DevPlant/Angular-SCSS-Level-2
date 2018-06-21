@@ -1,45 +1,50 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Input, OnChanges, SimpleChanges, Directive, ViewContainerRef } from '@angular/core';
 import { DisplayState } from '../../models/display-state.enum';
-import { Subject, Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
-import { AnimationEvent } from '@angular/animations';
-import { fadeInOut } from '../../views/base-view/animations/fade-in-out.animation';
+import { FadeWrapper2Component } from '../fade-wrapper-2/fade-wrapper-2.component';
 
-/**
- * All-in-one component.
- * Contains display logic and rendering logic.
- */
-
-@Component({
+@Directive({
   /* tslint:disable */
-  selector: 'fade-wrapper',
+  selector: '[fadeShouldDisplay]'
   /* tslint:enable */
-  templateUrl: './fade-wrapper.component.html',
-  styleUrls: ['./fade-wrapper.component.scss'],
-  animations: [fadeInOut]
 })
-export class FadeWrapperComponent implements OnInit, OnChanges {
+export class SmartFadeDirective implements OnChanges {
 
-  @Input() shouldDisplay = false;
+  /* tslint:disable */
+  @Input('fadeShouldDisplay') shouldDisplay = false;
+  /* tslint:enable */
   @Input() keepInDom = false;
 
-  displayState: DisplayState = DisplayState.HIDDEN;
+  fadeWrapper: FadeWrapper2Component; // component to sync with
 
-  fadeFinished$:    Subject<AnimationEvent> = new Subject<AnimationEvent>();
   _toggleRequest$:  Subject<DisplayState> = new Subject<DisplayState>();
 
+  // ---------------------------
+  // SYNC with wrapper Component
+
+  get displayState() {
+    return this.fadeWrapper.displayState;
+  }
+  set displayState(state: DisplayState) {
+    this.fadeWrapper.displayState = state;
+    this.fadeWrapper.doesRenderContent = this.doesRenderContent;
+  }
+  get fadeFinished$(): Subject<any> {
+    return this.fadeWrapper.fadeFinished$;
+  }
   get notHidden(): boolean {
     return this.displayState === DisplayState.DISPLAYED ||
             this.displayState === DisplayState.FADE_IN ||
             this.displayState === DisplayState.FADE_OUT;
   }
-
   get doesRenderContent(): boolean {
     return this.keepInDom ||
             this.shouldDisplay && this.notHidden;
   }
+  // ---------------------------
 
-  constructor() {
+  constructor(private _view: ViewContainerRef) {
     const fadeOutRequest$ = this._toggleRequest$.pipe(
       filter(e => e === DisplayState.DISPLAYED)
     );
@@ -55,18 +60,29 @@ export class FadeWrapperComponent implements OnInit, OnChanges {
     });
   }
 
-  ngOnInit() { }
-
   ngOnChanges(changes: SimpleChanges) {
+
+    // first changes - component initialization
     if (changes.shouldDisplay &&
-        changes.shouldDisplay.firstChange &&
-        changes.shouldDisplay.currentValue === true) {
-        this._fadeIn();
+        changes.shouldDisplay.firstChange) {
+        // connect to wrapper
+        this.fadeWrapper = this._view['_data'].componentView.component;
+        this.fadeWrapper.doesRenderContent = this.doesRenderContent;
+        if (changes.shouldDisplay.currentValue) {
+          this._fadeIn();
+        }
     }
+
+    // later changes
     if (changes.shouldDisplay &&
         !changes.shouldDisplay.firstChange) {
         this._toggleRequest$.next(this.displayState);
+        this.fadeWrapper.doesRenderContent = this.doesRenderContent;
     }
+
+    if (changes.keepInDom) {
+        this.fadeWrapper.doesRenderContent = this.doesRenderContent;
+      }
   }
 
   private _fadeOut(): void {
@@ -83,4 +99,3 @@ export class FadeWrapperComponent implements OnInit, OnChanges {
   }
 
 }
-

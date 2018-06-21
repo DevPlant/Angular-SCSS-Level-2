@@ -1,12 +1,36 @@
 <div class="base-view-root">
-  <h3>Base View, displaying content</h3>
-  <button class='my-button' (click)='toggle()'>Toggle Display</button>
-  <app-fade-wrapper [displayCondition]='display1' class="content-renderer">
-    <app-basic-content-renderer rendererName='renderer 1 - on hide, content killed'>
-    </app-basic-content-renderer>
-  </app-fade-wrapper>
-  <app-fade-wrapper [displayCondition]='display2' [keepAlive]='true' class="content-renderer-2">
-    <app-basic-content-renderer rendererName='renderer 2 - on hide, content still in DOM'>
-    </app-basic-content-renderer>
-  </app-fade-wrapper>
+  <button class='my-button' (click)='toggle1()'>Toggle Display</button>
+
+  <!-- ALL-IN-ONE  FADE  WRAPPER -->
+  <fade-wrapper [shouldDisplay]='display1'
+                [keepInDom]='true'
+                class="content-renderer">
+    <content-renderer [description]='description1'>
+    </content-renderer>
+  </fade-wrapper>
+
+  <div class="spacer"></div>
+
+  <button class='my-button' (click)='toggle2()'>Toggle Display</button>
+
+  <!-- DIRECTIVE-BASED  FADE  WRAPPER -->
+  <fade-wrapper-2 [fadeShouldDisplay]='display2' 
+                  class="content-renderer"> 
+    <content-renderer [description]='description2'>
+    </content-renderer>
+  </fade-wrapper-2>
+
+  <div class="spacer"></div>
+
+  <button class='my-button' (click)='toggle3()'>Toggle Display</button> 
+
+  <!-- DIRECTIVE-BASED  FADE  WRAPPER -->
+  <fade-wrapper-2 [fadeShouldDisplay]='display3' 
+                  [keepInDom]='true'
+                  class="content-renderer"> 
+    <content-renderer [description]='description3'>
+    </content-renderer>
+  </fade-wrapper-2>
+
+
 </div>

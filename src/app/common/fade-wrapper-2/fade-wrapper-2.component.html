@@ -1,4 +1,4 @@
-<div class="fade-wrapper-container" 
+<div class='fade-wrapper-container'
         *ngIf="doesRenderContent"
         [@fadeInOut]="displayState"
         (@fadeInOut.done)='fadeFinished$.next($event)'>

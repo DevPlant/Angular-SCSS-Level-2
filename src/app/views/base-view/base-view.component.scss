@@ -1,5 +1,4 @@
 .base-view-root {
-  position: relative;
   height: 100%;
   background-color: beige;
   padding: 20px;
@@ -9,14 +8,13 @@
   }
 
   .content-renderer {
-    height: 40%;
-    width: 90%;
-    position: absolute;
-    left: 20px;
-    top: 100px;
+    height: 25%;
+    width: 80%;
+    max-width: 800px;
   }
-  .content-renderer-2 {
-    @extend .content-renderer;
-    top: 500px;
+
+  .spacer {
+    height: 10px;
+    width: 100%;
   }
 }
