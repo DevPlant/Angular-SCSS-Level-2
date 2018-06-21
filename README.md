@@ -13,7 +13,7 @@ It's task is to render the content in a nice layout.
 
 Usually you would apply an animation like this:
 
-`<my-list [@fadeInOut] [content]='content' *ngIf='content.length > 0'></my-list>`
+`<my-list [@fadeInOut]='trigger' [content]='content' *ngIf='content.length > 0'></my-list>`
 
 The fade out transition is coupled with the destruction of the component (when 'condition' evaluates to false).
 Something like:
