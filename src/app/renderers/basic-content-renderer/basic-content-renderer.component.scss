@@ -1,0 +1,15 @@
+.basic-content-renderer-root {
+  border: 1px solid red;
+
+  height: 100%;
+  padding: 20px;
+  background-color: darkcyan;
+  color: beige;
+
+  overflow-y: scroll;
+
+
+  .title {
+    margin-bottom: 20px;
+  }
+}

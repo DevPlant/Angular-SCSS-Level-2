@@ -1,0 +1,6 @@
+<div class="fade-wrapper" 
+      *ngIf="keepAlive || displayCondition && notHidden"
+      [@fadeInOut]="displayState"
+      (@fadeInOut.done)='fadeFinished$.next($event)'>
+  <ng-content></ng-content>
+</div>

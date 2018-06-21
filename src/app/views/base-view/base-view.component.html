@@ -1,0 +1,12 @@
+<div class="base-view-root">
+  <h3>Base View, displaying content</h3>
+  <button class='my-button' (click)='toggle()'>Toggle Display</button>
+  <app-fade-wrapper [displayCondition]='display1' class="content-renderer">
+    <app-basic-content-renderer rendererName='renderer 1 - on hide, content killed'>
+    </app-basic-content-renderer>
+  </app-fade-wrapper>
+  <app-fade-wrapper [displayCondition]='display2' [keepAlive]='true' class="content-renderer-2">
+    <app-basic-content-renderer rendererName='renderer 2 - on hide, content still in DOM'>
+    </app-basic-content-renderer>
+  </app-fade-wrapper>
+</div>
