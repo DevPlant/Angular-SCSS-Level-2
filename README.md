@@ -1,8 +1,8 @@
-# Demo for a wrapper component that applies smart fadeInOut animation with given content.
+# ShowCase for a wrapper component applying smart fadeInOut to its projected content.
 
-Usually, applying fadeInOut animations on entire components may produce undesired rendering effects during fade out.
+Applying fadeInOut animations can produce undesired rendering effects during fade out, if the animated component renders content bound to its input properties.
 
-The content of a given component may be already killed while the component is fading out, due to the input property changes that triggered the fade out.
+During fade out, upon component destruction, the to-be-rendered content may be already "gone", resulting in an undesired look of the component while it disappears.
 
 Use case:
 A component is displayed with *ngIf='condition' : 
@@ -13,9 +13,10 @@ It's task is to render the content in a nice layout.
 
 Usually you would apply an animation like this:
 
-`<my-list [@fadeInOut]='trigger' [content]='content' *ngIf='content.length > 0'></my-list>`
+`<my-list [@fadeInOut]='fadeDisplayState' 
+          [content]='content' *ngIf='content.length > 0'></my-list>`
 
-The fade out transition is coupled with the destruction of the component (when 'condition' evaluates to false).
+There is a fade out transition coupled to the destruction of the component (when 'condition' evaluates to false).
 Something like:
 
 ```
@@ -24,23 +25,38 @@ transition(':leave', [
 ])
 ```
 
-When 'condition' changes from true to false, the renderer is not needed anymore. Then it's likely that content has also changed. It may even be null now. These changes reflect in the component even before the fade out begins, which you don't want to happen.
+When 'condition' becomes false, `<my-list>` is not needed anymore. Then it's likely that 'content' has also changed value. It may even be null now. These changes already show in the component before the fade out begins. So, during fade-out we'll see a list without content. Not cool.
 
 This app showcases a smart component wrapper that handles fade-In-Out logic such that fade in and out looks cool. There is no more animation attached to the initial component, but only to the wrapper.
 
-# How to use
+The wrapper comes in two flavors, depending on how flexible you want to be in development.
+`<fade-wrapper>`  is all-in-one. The component handles display logic and rendering logic.
+`<fade-wrapper-2>`  is a component with a custom directive. Here, the tricky rendering logic is seperated into the directive and can be reused and maintained more easily.
 
-The `*ngIf='condition'` becomes `[displayCondition]='condition'`
+# How to use the 2-in-1
+
+The `*ngIf='condition'` becomes `[shouldDisplay]='condition'`
 
 ```
-<fade-wrapper [displayCondition]='contents.length > 0'>
-  <my-list [contents]='contents'></my-list>
+<fade-wrapper [shouldDisplay]='contents.length > 0'>
+  // <my-list> or whatever
 </fade-wrapper>
 ```
 
 When the displayCondition becomes false, `<my-list>` is hidden, and then it's removed from the DOM.
 You may wanna keep it in the DOM. 
-Then use `<fade-wrapper [displayCondition]='...' [keepAlive]='true'></fade-wrapper>`
+Then use `<fade-wrapper [shoudDisplay]='...' [keepInDom]='true'></fade-wrapper>`
+
+# Using the other one
+
+```
+<fade-wrapper-2 [fadeShouldDisplay]='contents.length > 0'>
+  // <my-list> or whatever
+</fade-wrapper-2>
+```
+`[keepInDom]='true'` is used just as on the 2-in-1.
+
+
 
 # ComponentizeApp
 
