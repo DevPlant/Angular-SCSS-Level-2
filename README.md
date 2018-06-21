@@ -1,7 +1,8 @@
-# DEMO for a wrapper component that does smart fadeInOut animation with given content.
+# Demo for a wrapper component that applies smart fadeInOut animation with given content.
 
 Usually, applying fadeInOut animations on entire components may produce undesired rendering effects during fade out.
-The content of a given component may be already killed while it still fades out, due to the input property changes that triggered the fade out.
+
+The content of a given component may be already killed while the component is fading out, due to the input property changes that triggered the fade out.
 
 Use case:
 A component is displayed with *ngIf='condition' : 
