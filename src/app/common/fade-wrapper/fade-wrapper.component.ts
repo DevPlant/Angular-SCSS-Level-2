@@ -19,7 +19,8 @@ export class FadeWrapperComponent implements OnInit, OnChanges {
 
   displayState: DisplayState = DisplayState.HIDDEN;
 
-  fadeFinished$: Subject<AnimationEvent> = new Subject<AnimationEvent>();
+  fadeFinished$:    Subject<AnimationEvent> = new Subject<AnimationEvent>();
+  _toggleRequest$:  Subject<DisplayState> = new Subject<DisplayState>();
 
   get notHidden(): boolean {
     return this.displayState === DisplayState.DISPLAYED ||
@@ -27,7 +28,21 @@ export class FadeWrapperComponent implements OnInit, OnChanges {
             this.displayState === DisplayState.FADE_OUT;
   }
 
-  constructor() { }
+  constructor() {
+    const fadeOutRequest$ = this._toggleRequest$.pipe(
+      filter(e => e === DisplayState.DISPLAYED)
+    );
+    fadeOutRequest$.subscribe(() => {
+      this._fadeOut();
+    });
+
+    const fadeInRequest$ = this._toggleRequest$.pipe(
+      filter(e => e === DisplayState.HIDDEN)
+    );
+    fadeInRequest$.subscribe(() => {
+      this._fadeIn();
+    });
+  }
 
   ngOnInit() { }
 
@@ -39,30 +54,21 @@ export class FadeWrapperComponent implements OnInit, OnChanges {
     }
     if (changes.displayCondition &&
         !changes.displayCondition.firstChange) {
-        this._attemptFadeToggle();
+        this._toggleRequest$.next(this.displayState);
     }
   }
 
-  private _attemptFadeToggle() {
-    if (this.displayState === DisplayState.DISPLAYED) {
-      this._fadeOut().subscribe(() => {
-        this.displayState = DisplayState.HIDDEN;
-      });
-    }
-    if (this.displayState === DisplayState.HIDDEN) {
-      this._fadeIn().subscribe(() => {
-        this.displayState = DisplayState.DISPLAYED;
-      });
-    }
-  }
-
-  private _fadeOut(): Observable<any> {
+  private _fadeOut(): void {
     this.displayState = DisplayState.FADE_OUT;
-    return this.fadeFinished$.pipe(take(1));
+    this.fadeFinished$.pipe(take(1)).subscribe(() => {
+      this.displayState = DisplayState.HIDDEN;
+    });
   }
-  private _fadeIn(): Observable<any> {
+  private _fadeIn(): void {
     this.displayState = DisplayState.FADE_IN;
-    return this.fadeFinished$.pipe(take(1));
+    this.fadeFinished$.pipe(take(1)).subscribe(() => {
+      this.displayState = DisplayState.DISPLAYED;
+    });
   }
 
 }
