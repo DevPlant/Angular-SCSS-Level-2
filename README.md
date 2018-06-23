@@ -47,7 +47,7 @@ When the displayCondition becomes false, `<my-list>` is hidden, and then it's re
 You may wanna keep it in the DOM. 
 Then use `<fade-wrapper [shoudDisplay]='...' [keepInDom]='true'></fade-wrapper>`
 
-# Using the other one
+# How to use the directive-based solution
 
 ```
 <fade-wrapper-2 [fadeShouldDisplay]='contents.length > 0'>
@@ -55,7 +55,6 @@ Then use `<fade-wrapper [shoudDisplay]='...' [keepInDom]='true'></fade-wrapper>`
 </fade-wrapper-2>
 ```
 `[keepInDom]='true'` is used just as on the 2-in-1.
-
 
 
 # ComponentizeApp
