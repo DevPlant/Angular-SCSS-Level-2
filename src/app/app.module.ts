@@ -9,6 +9,7 @@ import { MatTableModule, MatPaginatorModule, MatSortModule } from '@angular/mate
 import { FadeWrapperComponent } from './common/fade-wrapper/fade-wrapper.component';
 import { FadeWrapper2Component } from './common/fade-wrapper-2/fade-wrapper-2.component';
 import { SmartFadeDirective } from './common/directives/smart-fade.directive';
+import { GenericFadeWrapperComponent } from './common/generic-fade-wrapper/generic-fade-wrapper.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { SmartFadeDirective } from './common/directives/smart-fade.directive';
     FadeWrapperComponent,
     FadeWrapper2Component,
     SmartFadeDirective,
+    GenericFadeWrapperComponent,
   ],
   imports: [
     BrowserModule,

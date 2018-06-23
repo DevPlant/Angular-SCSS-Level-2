@@ -1,28 +1,29 @@
-import { Input, OnChanges, SimpleChanges, Directive, ViewContainerRef } from '@angular/core';
+import { Input, OnChanges, SimpleChanges, Directive, ViewContainerRef, OnDestroy, OnInit } from '@angular/core';
 import { DisplayState } from '../../models/display-state.enum';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
-import { FadeWrapper2Component } from '../fade-wrapper-2/fade-wrapper-2.component';
+import { GenericFadeWrapperComponent } from '../generic-fade-wrapper/generic-fade-wrapper.component';
 
 @Directive({
   /* tslint:disable */
   selector: '[fadeShouldDisplay]'
   /* tslint:enable */
 })
-export class SmartFadeDirective implements OnChanges {
+export class SmartFadeDirective implements OnChanges, OnDestroy, OnInit {
 
   /* tslint:disable */
   @Input('fadeShouldDisplay') shouldDisplay = false;
   /* tslint:enable */
   @Input() keepInDom = false;
 
-  fadeWrapper: FadeWrapper2Component; // component to sync with
+  fadeWrapper: GenericFadeWrapperComponent; // wrapper component to sync with
 
   _toggleRequest$:  Subject<DisplayState> = new Subject<DisplayState>();
+  _fadeInSub:       Subscription;
+  _fadeOutSub:      Subscription;
 
   // ---------------------------
   // SYNC with wrapper Component
-
   get displayState() {
     return this.fadeWrapper.displayState;
   }
@@ -45,19 +46,9 @@ export class SmartFadeDirective implements OnChanges {
   // ---------------------------
 
   constructor(private _view: ViewContainerRef) {
-    const fadeOutRequest$ = this._toggleRequest$.pipe(
-      filter(e => e === DisplayState.DISPLAYED)
-    );
-    fadeOutRequest$.subscribe(() => {
-      this._fadeOut();
-    });
-
-    const fadeInRequest$ = this._toggleRequest$.pipe(
-      filter(e => e === DisplayState.HIDDEN)
-    );
-    fadeInRequest$.subscribe(() => {
-      this._fadeIn();
-    });
+    // connect to wrapper
+    this.fadeWrapper = this._view['_data'].componentView.component;
+    this.fadeWrapper.doesRenderContent = this.doesRenderContent;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -65,9 +56,6 @@ export class SmartFadeDirective implements OnChanges {
     // first changes - component initialization
     if (changes.shouldDisplay &&
         changes.shouldDisplay.firstChange) {
-        // connect to wrapper
-        this.fadeWrapper = this._view['_data'].componentView.component;
-        this.fadeWrapper.doesRenderContent = this.doesRenderContent;
         if (changes.shouldDisplay.currentValue) {
           this._fadeIn();
         }
@@ -83,6 +71,27 @@ export class SmartFadeDirective implements OnChanges {
     if (changes.keepInDom) {
         this.fadeWrapper.doesRenderContent = this.doesRenderContent;
       }
+  }
+
+  ngOnInit() {
+    const fadeOutRequest$ = this._toggleRequest$.pipe(
+      filter(e => e === DisplayState.DISPLAYED)
+    );
+    this._fadeOutSub = fadeOutRequest$.subscribe(() => {
+      this._fadeOut();
+    });
+
+    const fadeInRequest$ = this._toggleRequest$.pipe(
+      filter(e => e === DisplayState.HIDDEN)
+    );
+    this._fadeInSub = fadeInRequest$.subscribe(() => {
+      this._fadeIn();
+    });
+  }
+
+  ngOnDestroy() {
+    this._fadeInSub.unsubscribe();
+    this._fadeOutSub.unsubscribe();
   }
 
   private _fadeOut(): void {

@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { fadeInOut } from '../../views/base-view/animations/fade-in-out.animation';
 import { DisplayState } from '../../models/display-state.enum';
 import { Subject } from 'rxjs';
+import { GenericFadeWrapperComponent } from '../generic-fade-wrapper/generic-fade-wrapper.component';
 
 /**
  * Wrapper component to be used with [shouldDisplay]  smart-fade.directive.ts
@@ -16,11 +17,13 @@ import { Subject } from 'rxjs';
   styleUrls: ['./fade-wrapper-2.component.scss'],
   animations: [fadeInOut]
 })
-export class FadeWrapper2Component {
+export class FadeWrapper2Component extends GenericFadeWrapperComponent {
   public doesRenderContent = false;
   public displayState = DisplayState.HIDDEN;
   public fadeFinished$: Subject<AnimationEvent> = new Subject<AnimationEvent>();
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
 }

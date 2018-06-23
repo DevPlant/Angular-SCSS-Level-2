@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { DisplayState } from '../../models/display-state.enum';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { AnimationEvent } from '@angular/animations';
 import { fadeInOut } from '../../views/base-view/animations/fade-in-out.animation';
@@ -18,7 +18,7 @@ import { fadeInOut } from '../../views/base-view/animations/fade-in-out.animatio
   styleUrls: ['./fade-wrapper.component.scss'],
   animations: [fadeInOut]
 })
-export class FadeWrapperComponent implements OnInit, OnChanges {
+export class FadeWrapperComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() shouldDisplay = false;
   @Input() keepInDom = false;
@@ -27,6 +27,8 @@ export class FadeWrapperComponent implements OnInit, OnChanges {
 
   fadeFinished$:    Subject<AnimationEvent> = new Subject<AnimationEvent>();
   _toggleRequest$:  Subject<DisplayState> = new Subject<DisplayState>();
+  _fadeInSub:       Subscription;
+  _fadeOutSub:      Subscription;
 
   get notHidden(): boolean {
     return this.displayState === DisplayState.DISPLAYED ||
@@ -39,23 +41,23 @@ export class FadeWrapperComponent implements OnInit, OnChanges {
             this.shouldDisplay && this.notHidden;
   }
 
-  constructor() {
+  constructor() { }
+
+  ngOnInit() {
     const fadeOutRequest$ = this._toggleRequest$.pipe(
       filter(e => e === DisplayState.DISPLAYED)
     );
-    fadeOutRequest$.subscribe(() => {
+    this._fadeOutSub = fadeOutRequest$.subscribe(() => {
       this._fadeOut();
     });
 
     const fadeInRequest$ = this._toggleRequest$.pipe(
       filter(e => e === DisplayState.HIDDEN)
     );
-    fadeInRequest$.subscribe(() => {
+    this._fadeInSub = fadeInRequest$.subscribe(() => {
       this._fadeIn();
     });
   }
-
-  ngOnInit() { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.shouldDisplay &&
@@ -67,6 +69,11 @@ export class FadeWrapperComponent implements OnInit, OnChanges {
         !changes.shouldDisplay.firstChange) {
         this._toggleRequest$.next(this.displayState);
     }
+  }
+
+  ngOnDestroy() {
+    this._fadeInSub.unsubscribe();
+    this._fadeOutSub.unsubscribe();
   }
 
   private _fadeOut(): void {
