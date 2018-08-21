@@ -1,15 +1,19 @@
-.basic-content-renderer-root {
-  border: 1px solid red;
+@import '../../../../assets/styles/palette.scss';
 
-  height: 100%;
+.basic-content-renderer-root {
+  border: 1px solid $red;
+
+  max-height: 300px;
   padding: 20px;
-  background-color: darkcyan;
-  color: beige;
+  background-color: $grey;
+  color: $light-cold-1;
 
   overflow-y: scroll;
 
 
-  .title {
-    margin-bottom: 20px;
+  .description {
+    margin-bottom: 10px;
+    font-size: 18px;
+    text-align: center;
   }
 }

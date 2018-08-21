@@ -1,36 +1,35 @@
 <div class="base-view-root">
-  <button class='my-button' (click)='toggle1()'>Toggle Display</button>
 
-  <!-- ALL-IN-ONE  FADE  WRAPPER -->
-  <fade-wrapper [shouldDisplay]='display1'
-                [keepInDom]='true'
-                class="content-renderer">
-    <content-renderer [description]='description1'>
-    </content-renderer>
-  </fade-wrapper>
+  <h1>
+    <span class="display-text">display:none</span>
+    <span class="vs-text"> vs. </span>
+    <span class="visibility-text">visibility: hidden</span>
+  </h1>
 
-  <div class="spacer"></div>
-
-  <button class='my-button' (click)='toggle2()'>Toggle Display</button>
+  <button class='my-button display-button' (click)='toggle2()'>Toggle Display</button>
 
   <!-- DIRECTIVE-BASED  FADE  WRAPPER -->
-  <fade-wrapper-2 [fadeShouldDisplay]='display2' 
-                  class="content-renderer"> 
-    <content-renderer [description]='description2'>
-    </content-renderer>
-  </fade-wrapper-2>
+  <div class="content-wrapper">
+    <fade-wrapper-2 [fadeShouldDisplay]='display2'
+                    [keepInDom]='false'>
+      <content-renderer [description]='description2'>
+      </content-renderer>
+    </fade-wrapper-2>
+  </div>
+  <hr>
 
-  <div class="spacer"></div>
+  <button class='my-button visibility-button' (click)='toggle3()'>Toggle Visibility</button>
 
-  <button class='my-button' (click)='toggle3()'>Toggle Display</button> 
+  <!-- DIRECTIVE-BASED  FADE  WRAPPER, KEEP IN DOM ON FADE -->
 
-  <!-- DIRECTIVE-BASED  FADE  WRAPPER -->
-  <fade-wrapper-2 [fadeShouldDisplay]='display3' 
-                  [keepInDom]='true'
-                  class="content-renderer"> 
-    <content-renderer [description]='description3'>
-    </content-renderer>
-  </fade-wrapper-2>
+  <div class="content-wrapper">
+    <fade-wrapper-2 [fadeShouldDisplay]='display3'
+                    [keepInDom]='true'>
+      <content-renderer [description]='description3'>
+      </content-renderer>
+    </fade-wrapper-2>
+  </div>
+  <hr>
 
-
+  <button class="my-button"> Dummy Button </button>
 </div>

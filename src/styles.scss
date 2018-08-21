@@ -1,10 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import '../assets/styles/palette.scss';
+@import '../assets/styles/typography.scss';
+
 * {
   margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 body {
   height: 100vh;
+  background-color: $light-cold-2;
 }
 body { margin: 0; }

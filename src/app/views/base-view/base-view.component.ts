@@ -8,13 +8,11 @@ import { DisplayState } from '../../models/display-state.enum';
 })
 export class BaseViewComponent implements OnInit {
 
-  display1 = true;
   display2 = true;
   display3 = true;
 
-  description1 = 'on hide, content stays in DOM';
-  description2 = 'on hide, content destroyed';
-  description3 = 'on hide, content stays in DOM';
+  description2 = 'hide ---> destroy';
+  description3 = 'hide ---> keep in DOM';
 
   displayState: DisplayState = DisplayState.HIDDEN;
 
@@ -22,9 +20,6 @@ export class BaseViewComponent implements OnInit {
 
   ngOnInit() { }
 
-  toggle1() {
-    this.display1 = !this.display1;
-  }
   toggle2() {
     this.display2 = !this.display2;
   }
