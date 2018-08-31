@@ -12,14 +12,7 @@ git checkout stripped       < --- >       git checkout master
 
 
 
-
-
-
-
-
-
-
-
+------------------------------------------------------------------------
 
 ORIGINAL ReadMe - not interesting for the SCSS exercise
 
