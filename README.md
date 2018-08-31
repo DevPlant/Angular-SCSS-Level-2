@@ -11,6 +11,10 @@ git checkout stripped       < --- >       git checkout master
 
 
 
+BONUS EXERCISE:  how would you change the font-family used in the <app-table-renderer> component?  
+
+HINT: ng-deep somewhere higher up in the hierarchy
+
 
 ------------------------------------------------------------------------
 
