@@ -1,3 +1,29 @@
+On branch 'master' - the styled version
+
+
+On branch 'stripped' - the unstyled version
+
+
+
+Switch between branches:
+
+git checkout stripped       < --- >       git checkout master
+
+
+
+
+
+
+
+
+
+
+
+
+
+ORIGINAL ReadMe - not interesting for the SCSS exercise
+
+
 # ShowCase for a wrapper component applying smart fadeInOut to its projected content.
 
 Applying fadeInOut animations can produce undesired rendering effects during fade out, if the animated component renders content bound to its input properties.
